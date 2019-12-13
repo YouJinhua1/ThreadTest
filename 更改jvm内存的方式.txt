@@ -1,0 +1,51 @@
+修改 catalina.bat 或者 startup.bat 文 件 在 第 一 行 的： “ @echo off ” 下面（即第二行）添加：
+
+   1.8设置：
+
+           SET JAVA_OPTS="-server -Xms256m -Xmx512m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m"
+
+   1.7设置：
+
+	       SET JAVA_OPTS="-server -Xms1024m -Xmx1024m -XX:PermSize=512m -XX:MaxPermSize=512m" 
+
+说明：物理内存值得是电脑运行内存
+
+      一、 参数的含义：
+
+		      1. -server：java堆（heap）初始大小
+
+		      2. MetaspaceSize：初始元空间的大小
+
+      二、 参数的大小：
+
+		      1. -Xms：默认物理内存(比如：8G)的: 1/64（对应的则是：128m） , 最大不要超过物理内存的：80%
+
+		      2. -Xmx：建议设置为物理内存的一半，不要超过实际物理内存
+
+		      3. MetaspaceSize：默认 21m 
+
+		      4. MetaspaceSize：默认无上限
+		 
+JDK1.8以下出现：java.lang.OutOfMemoryError: PermGen space， 永久区溢出。
+
+需要设置：-XX:PermSize=200M -XX:MaxPermSize=256M 
+
+JDK8中用metaspace代替permsize，因此在许多我们设置permsize大小的地方同样需要修改配置为metaspace
+
+将-XX:PermSize=200m;-XX:MaxPermSize=256m;
+
+修改为：-XX:MetaspaceSize=200m;-XX:MaxMetaspaceSize=256m;
+
+注意：
+	1. 还可以向如下的方式去修改jdk版本，也是在catalina.bat 或者 startup.bat 文 件 在
+       第 一 行 的： “ @echo off ” 下面（即第二行）添加：
+       
+		SET JAVA_HOME=D:\jdk\jdk1.7
+		SET TOMCAT_HOME=D:\tomcat\apache-tomcat-8\apache-tomcat-8.0.47
+		SET JAVA_OPTS=-server -Xms1024m -Xmx2048m -XX:PermSize=1024m -XX:MaxPermSize=2048m
+		
+	2. 在eclipse里面启动tomcat的时候以上方式没有作用，需要自己在添加jdk的时候指定
+       Default VM arguments:的参数为：
+       	
+	   -Xms1024m -Xmx2048m -XX:PermSize=1024m -XX:MaxPermSize=2048m
+		
